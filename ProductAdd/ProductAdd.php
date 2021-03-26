@@ -1,3 +1,39 @@
+<?php
+
+if (isset($_POST["addtocart"])) {
+    
+    $product = array(
+        "code" => $_POST["productCode"],
+        "name" => $_POST["productName"],
+        "image" => $_POST["productImage"],
+        "price" => $_POST["price"],
+        "quentity" => $_POST["quentity"]
+    );
+    if (!empty($_SESSION["cart"])) {
+        $beforArray =  $_SESSION["cart"];
+        $_SESSION["cart"] = array($_POST["productCode"] => $product);
+        $_SESSION["cart"] = array_merge($_SESSION["cart"], $beforArray);
+    } else {
+        $_SESSION["cart"] = array($_POST["productCode"] => $product);
+    }
+
+    $_POST["productCode"] = "";
+    $_POST["productName"] = "";
+    $_POST["productImage"] = "";
+    $_POST["price"] = "";
+    $_POST["quentity"] = "";
+
+    //header("Refresh:0; url=index.php");
+} else {
+    $_POST["productCode"] = "";
+    $_POST["productName"] = "";
+    $_POST["productImage"] = "";
+    $_POST["price"] = "";
+    $_POST["quentity"] = "";
+}
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -303,12 +339,9 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="col-12 col-md-6">
                                 <div class="single_product_desc">
-
-                                    <h4 class="title"><a href="#"><?php echo $_COOKIE["name"]; ?></a></h4>
-
+                                    <h4 class="title"><a><?php echo $_COOKIE["name"]; ?></a></h4>
                                     <h4 class="price">$ <?php echo $_COOKIE["price"]; ?></h4>
 
                                     <p class="available">Available: <?php echo $_COOKIE["quentity"]; ?> <span class="text-muted">In Stock</span></p>
@@ -321,26 +354,23 @@
                                         <i class="fa fa-star-o" aria-hidden="true"></i>
                                     </div>
 
-
                                     <!-- Add to Cart Form -->
-                                    <form class="cart clearfix mb-50 d-flex" method="post" action="./Database.php">
+                                    <form method="post" action="" class="cart clearfix mb-50 d-flex">
                                         <div class="quantity">
-                                            <span class="qty-minus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty )) effect.value--;return false;"><i class="fa fa-minus" aria-hidden="true"></i></span>
-                                            <input type="number" class="qty-text" id="qty" step="1" min="1" max="12" name="quentity" value="1">
+                                            <span class="qty-minus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( (!isNaN( qty )) && (qty != 0) && (0<qty)) { effect.value--;} return false;"><i class="fa fa-minus" aria-hidden="true"></i></span>
+                                            <input name="quentity" type="number" class="qty-text" id="qty" step="1" min="1" max="12" value="1">
                                             <span class="qty-plus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty )) effect.value++;return false;"><i class="fa fa-plus" aria-hidden="true"></i></span>
-
                                         </div>
-                                        <input type="hidden" name="productCode" value="<?php echo $row["name"]; ?>" />
-                                        <input type="hidden" name="productName" value="<?php echo $row["name"]; ?>" />
-                                        <input type="hidden" name="productImage" value="<?php echo $row["name"]; ?>" />
-
-                                        <input type="hidden" name="price" value="<?php echo $row["price"]; ?>" />
-
-                                        <button onclick="<?php ?>" type="submit" name="addtocart" value="5" class="btn cart-submit d-block">Add to cart</button>
-
+                                        <input id="productCode" type="hidden" name="productCode" value="<?php echo $_COOKIE["code"]; ?>" />
+                                        <input id="productName" type="hidden" name="productName" value="<?php echo $_COOKIE["name"]; ?>" />
+                                        <input id="productImage" type="hidden" name="productImage" value="<?php echo $_COOKIE["mainimage"]; ?>" />
+                                        <input id="price" type="hidden" name="price" value="<?php echo $_COOKIE["price"]; ?>" />
+                                        <button onclick="<?php echo include("./method.php"); ?>" type="submit" name="addtocart" value="5" class="btn cart-submit d-block">Add to cart</button>
 
                                     </form>
+                                    <!-- end Form -->
 
+                                    <!-- Add to Cart Form -->
                                     <div id="accordion" role="tablist">
                                         <div class="card">
                                             <div class="card-header" role="tab" id="headingOne">
@@ -351,41 +381,16 @@
 
                                             <div id="collapseOne" class="collapse show" role="tabpanel" aria-labelledby="headingOne" data-bs-parent="#accordion">
                                                 <div class="card-body">
-                                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pharetra tempor so dales. Phasellus sagittis auctor gravida. Integ er bibendum sodales arcu id te mpus. Ut consectetur lacus.</p>
-                                                    <p>Approx length 66cm/26" (Based on a UK size 8 sample) Mixed fibres</p>
-                                                    <p>The Model wears a UK size 8/ EU size 36/ US size 4 and her height is 5'8"</p>
+                                                    <p> <?php echo $_COOKIE["description"]; ?></p>
+
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="card">
-                                            <div class="card-header" role="tab" id="headingTwo">
-                                                <h6 class="mb-0">
-                                                    <a class="collapsed" data-bs-toggle="collapse" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">Cart Details</a>
-                                                </h6>
-                                            </div>
-                                            <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo" data-bs-parent="#accordion">
-                                                <div class="card-body">
-                                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Explicabo quis in veritatis officia inventore, tempore provident dignissimos nemo, nulla quaerat. Quibusdam non, eos, voluptatem reprehenderit hic nam! Laboriosam, sapiente! Praesentium.</p>
-                                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officia magnam laborum eaque.</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="card">
-                                            <div class="card-header" role="tab" id="headingThree">
-                                                <h6 class="mb-0">
-                                                    <a class="collapsed" data-bs-toggle="collapse" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">shipping &amp; Returns</a>
-                                                </h6>
-                                            </div>
-                                            <div id="collapseThree" class="collapse" role="tabpanel" aria-labelledby="headingThree" data-bs-parent="#accordion">
-                                                <div class="card-body">
-                                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Esse quo sint repudiandae suscipit ab soluta delectus voluptate, vero vitae, tempore maxime rerum iste dolorem mollitia perferendis distinctio. Quibusdam laboriosam rerum distinctio. Repudiandae fugit odit, sequi id!</p>
-                                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae qui maxime consequatur laudantium temporibus ad et. A optio inventore deleniti ipsa.</p>
-                                                </div>
-                                            </div>
-                                        </div>
+
                                     </div>
 
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -397,5 +402,28 @@
         </div>
     </div>
 </body>
+<script type="text/javascript">
+    function saveTocart() {
+        var quentity = document.getElementById("qty").value;
+        var code = document.getElementById("productCode").value;
+        var name = document.getElementById("productName").value;
+        var image = document.getElementById("productImage").value;
+        var price = document.getElementById("price").value;
+        console.log(quentity + code + image);
+        var cartArr = ['name' = name, 'code' = code, 'price' = price, 'quentity' = quentity, 'image' = image];
+        // cartArr.push("Kiwi");
+        setCookie("saveTocartCookie", cartArr, 1);
+    }
+
+    /**function setCookie(cname, cvalue, exdays) {
+        var d = new Date();
+        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+        var expires = "expires=" + d.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + ";path=/";
+        //  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        echo '<script> alert("  No data ");
+    }*/
+</script>
+
 
 </html>

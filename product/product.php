@@ -163,16 +163,43 @@
             <div class="col-sm-12 col-md-12 col-lg-12 ">
                 <ul id="headings">
                     <li>
-                        <h1>ALL</h1>
+                        <form method="GET" action="">
+                            <input type="hidden" name="type" value="<?php echo $type = "all"; ?>" />
+
+                            <button type="submit" style="color: inherit; border:none; background: none; ">
+                                <h1> ALL </h1>
+                            </button>
+
+                        </form>
                     </li>
                     <li>
-                        <h1>WOMEN</h1>
+                        <form method="GET" action="">
+                            <input type="hidden" name="type" value="<?php echo $type = "women"; ?>" />
+                            <button type="submit" style="color: inherit; border:none; background: none; ">
+                                <h1> WOMEN </h1>
+                            </button>
+
+                        </form>
                     </li>
                     <li>
-                        <h1>MEN</h1>
+                        <form method="GET" action="">
+                            <input type="hidden" name="type" value="<?php echo $type = "men"; ?>" />
+
+                            <button type="submit" style="color: inherit; border:none; background: none; ">
+                                <h1> MEN</h1>
+                            </button>
+
+                        </form>
                     </li>
                     <li>
-                        <h1>KIDS</h1>
+                        <form method="GET" action="">
+                            <input type="hidden" name="type" value="<?php echo $type = "kids"; ?>" />
+
+                            <button type="submit" style="color: inherit; border:none; background: none; ">
+                                <h1> KIDS </h1>
+                            </button>
+
+                        </form>
                     </li>
 
                 </ul>
@@ -187,6 +214,7 @@
             <?php
 
             include('./Database-php/start-mysql-connection.php');
+
             global  $price;
             global  $id;
             global  $code;
@@ -198,12 +226,47 @@
             global  $description;
             global  $mainimage;
             global  $quentity;
-            global $i;
+            global  $i;
 
+            //clicked to filter buttons
+            if (isset($_POST["type"])) {
+                $type = $_POST["type"];
+                if ($type == "all") {
+                    $query = 'SELECT * FROM productshow ';
+                }
+                if ($type == "men") {
+                    $type = "mail";
+                    $query = 'SELECT * FROM productshow WHERE gender ="' . $type . '" ';
+                }
+                if ($type == "women") {
+                    $type = "femail";
+                    $query = 'SELECT * FROM productshow WHERE gender ="' . $type . '" ';
+                }
+                if ($type == "kids") {
+                    $type = "kids";
+                    $query = 'SELECT * FROM productshow WHERE gender ="' . $type . '" ';
+                }
+                if ($type == "earing") {
+                    $type = "earing";
+                    $query = 'SELECT * FROM productshow WHERE type ="' . $type . '" ';
+                }
+                if ($type == "ring") {
+                    $type = "ring";
+                    $query = 'SELECT * FROM productshow WHERE type ="' . $type . '" ';
+                }
+                if ($type == "bracelet") {
+                    $type = "bracelet";
+                    $query = 'SELECT * FROM productshow WHERE type ="' . $type . '" ';
+                }
+                if ($type == "necklesse") {
+                    $type = "necklesse";
+                    $query = 'SELECT * FROM productshow WHERE type ="' . $type . '" ';
+                }
+            } else {
+                $query = 'SELECT * FROM productshow ';
+            }
 
-            $query = "SELECT * FROM productshow";
             $result = mysqli_query($connection, $query);
-
             if (mysqli_num_rows($result) > 0) {
                 $i = 0;
                 while ($row = mysqli_fetch_assoc($result)) {
@@ -221,10 +284,35 @@
                         $quentity[$i] = $row['quentity'];
                         $i++;
                     }
-
                     // echo print_r($row);
                 }
+            } else {
+                //samhara welawata product nathi wenn puluwan databse eke
+                $query = 'SELECT * FROM productshow ';
+                $result = mysqli_query($connection, $query);
+                if (mysqli_num_rows($result) > 0) {
+                    $i = 0;
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        if (isset($row)) {
+                            $id[$i] = $row['id'];
+                            $code[$i] = $row['code'];
+                            $color[$i] = $row['color'];
+                            $material[$i] = $row['material'];
+                            $weight[$i] = $row['weight'];
+                            $name[$i] = $row['name'];
+                            $gender[$i] = $row['gender'];
+                            $description[$i] = $row['description'];
+                            $mainimage[$i] = $row['mainimage'];
+                            $price[$i] = $row['price'];
+                            $quentity[$i] = $row['quentity'];
+                            $i++;
+                        }
+                        // echo print_r($row);
+                    }
+                }
             }
+
+            // $c = 0;
             $c = count($id); //ength of array
             //  echo print_r($id);
             for ($i = 0; $i < $c; $i++) {
@@ -242,13 +330,15 @@
                     <!-- Product Description -->
                     <div class="product-description">
                         <p class="product-details">
-                            <span><?php echo $price[$i];  ?></span> |
+                            <span>$<?php echo $price[$i];  ?></span> |
                             <span><?php echo $color[$i]; ?></span> |
                             <span><?php echo $name[$i];  ?></span> |
                             <span><?php echo $material[$i];  ?></span> |
-                            <span><?php echo $weight[$i];  ?></span> |
-                            <span><?php echo $gender[$i]; ?></span> |
-                            <span><?php echo $code[$i];  ?></span>
+                            <span><?php echo $weight[$i];  ?></span>
+                            <span><?php //echo $gender[$i]; 
+                                    ?></span>
+                            <span><?php //echo $code[$i];   
+                                    ?></span>
                         </p>
                         <p class="paragraph"><?php echo $description[$i]; ?> </p>
 
@@ -280,7 +370,7 @@
             <?php
 
             }
-
+            include('./Database-php/close-mysql-connection.php');
             ?>
         </div>
 
@@ -302,6 +392,7 @@
         setCookie("mainimage", mainimage, 1);
         setCookie("quentity", quentity, 1);
         // data to be sent to the POST request
+        //  location.reload();
     }
 
     function setCookie(cname, cvalue, exdays) {

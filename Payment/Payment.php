@@ -1,3 +1,78 @@
+<?php
+//save order details with payment billing details
+if (isset($_POST["payment"])) {
+    $dt = date("l jS \of F Y h:i:s A");
+    //cutomer details in orer
+    $pc = array(
+        "passport" => $_POST["passport"],
+        "firstname" => $_POST["firstName"],
+        "lastname" => $_POST["lastName"],
+        "company" => $_POST["company"],
+        "country" => $_POST["country"],
+        "lineone" => $_POST["lineone"],
+        "linetwo" => $_POST["linetwo"],
+        "postalcode" => $_POST["postalcode"],
+        "city" => $_POST["city"],
+        "province" => $_POST["province"],
+        "mobile" => $_POST["mobile"],
+        "email" => $_POST["email"]
+    );
+
+    if (empty($_SESSION["customer"])) {
+        $_SESSION["customer"] = $pc; //session inside store customer details
+    }
+    $res = 0;
+    if (!empty($_SESSION["customer"])) {
+        //inset databse mysql session eke thin array length ek anuwa
+        foreach ($_SESSION["cart"] as $keys => $values) {
+            if (
+                !empty($values["quentity"]) && !empty($values["quentity"]) &&
+                !empty($values["code"]) && !empty($values["name"] &&
+                    !empty($values["price"]) && !empty($values["image"]))
+            ) {
+                $tp = $values["price"] * $values["quentity"];
+
+                try {
+                    include('./Database-php/start-mysql-connection.php');
+                    //insert order
+                    $insertorder = "INSERT INTO orders (idorpassport,productid,quentity,price,total,date,mobile) VALUES('{$pc["passport"]}','{$values["code"]}','{$values["quentity"]}','{$values["price"]}','{$tp}','{$dt}') ";
+                    $result = mysqli_query($connection, $insertorder);
+                    if ($result) {
+                        $res = 1;
+                        // echo '<script type="text/javascript"> alert(" ORDER COMPLETED ."); </script>';
+                    }
+                    include('./Database-php/close-mysql-connection.php');
+                } catch (Exception $e) {
+                    $res = 0;
+                }
+
+                try {
+                    include('./Database-php/start-mysql-connection.php');
+                    //inser customer
+                    $insertcustomer = "INSERT INTO customer (firstname,lastname,company,lineone,linetwo,postalcode,city,province,email,idorpassport,date) VALUES('{$_SESSION["customer"]["firstname"]}','{$_SESSION["customer"]["lastname"]}','{$_SESSION["customer"]["company"]}','{$_SESSION["customer"]["lineone"]}','{$_SESSION["customer"]["linetwo"]}','{$_SESSION["customer"]["postalcode"]}','{$_SESSION["customer"]["city"]}','{$_SESSION["customer"]["province"]}','{$_SESSION["customer"]["email"]}','{$_SESSION["customer"]["passport"]}','{$dt}','{$_SESSION["customer"]["mobile"]}') ";
+                    $result = mysqli_query($connection, $insertcustomer);
+                    if ($result) {
+                        $res = 1;
+                        //   echo '<script type="text/javascript"> alert(" ORDER COMPLETED ."); </script>';
+                    }
+                    include('./Database-php/close-mysql-connection.php');
+                } catch (Exception $e) {
+                    $res = 0;
+                }
+            }
+        }
+
+        if ($res == 1) {
+            echo '<script type="text/javascript"> alert(" ORDER COMPLETED ."); </script>';
+        } else {
+            echo '<script type="text/javascript"> alert(" ORDER COMPLETED ."); </script>';
+        }
+    }
+}
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -139,35 +214,41 @@
 
 <body>
     <section>
-        <div class="checkout_area section_padding_100">
-            <div class="container">
-                <div class="row">
+        <form action="" method="POST">
+            <div class="checkout_area section_padding_100">
+                <div class="container">
+                    <div class="row">
 
-                    <div class="col-12 col-md-6">
-                        <div class="checkout_details_area mt-50 clearfix">
+                        <div class="col-12 col-md-6">
+                            <div class="checkout_details_area mt-50 clearfix">
 
-                            <div class="cart-page-heading">
-                                <h5>Billing Address</h5>
+                                <div class="cart-page-heading">
+                                    <h5>Billing Address</h5>
 
-                            </div>
+                                </div>
 
-                            <form action="#" method="post">
+
                                 <div class="row">
+                                    </br> </br>
                                     <div class="col-md-6 mb-3">
                                         <label for="first_name">First Name <span>*</span></label>
-                                        <input placeholder="Savindu" type="text" class="form-control" id="first_name" value="" required>
+                                        <input required name="firstname" placeholder="Savindu" type="text" class="form-control" id="first_name" value="" required>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="last_name">Last Name <span>*</span></label>
-                                        <input placeholder="Pasintha" type="text" class="form-control" id="last_name" value="" required>
+                                        <input required name="lastname" placeholder="Pasintha" type="text" class="form-control" id="last_name" value="" required>
+                                    </div>
+                                    <div class="col-12-6 mb-3">
+                                        <label for="last_name">ID/PASSPORT No <span>*</span></label>
+                                        <input required name="passport" placeholder="45487878b" type="text" class="form-control" id="last_name" value="" required>
                                     </div>
                                     <div class="col-12 mb-3">
                                         <label for="company">Company Name</label>
-                                        <input placeholder="ABC company" type="text" class="form-control" id="company" value="">
+                                        <input required name="company" placeholder="ABC company" type="text" class="form-control" id="company" value="">
                                     </div>
                                     <div class="col-12 mb-3">
                                         <label for="country">Country <span>*</span></label>
-                                        <select class="custom-select d-block w-100" id="country">
+                                        <select name="country" class="custom-select d-block w-100" id="country">
                                             <option value="usa">United States</option>
                                             <option value="uk">United Kingdom</option>
                                             <option value="ger">Germany</option>
@@ -181,132 +262,171 @@
                                     </div>
                                     <div class="col-12 mb-3">
                                         <label for="street_address">Address <span>*</span></label>
-                                        <input placeholder="No.57 Ritiketiya " type="text" class="form-control mb-3" id="street_address" value="">
-                                        <input placeholder="New colone , Aluthgama" type="text" class="form-control" id="street_address2" value="">
+                                        <input required name="lineone" placeholder="No.57 Ritiketiya " type="text" class="form-control mb-3" id="street_address" value="">
+                                        <input name="linetwo" placeholder="New colone , Aluthgama" type="text" class="form-control" id="street_address2" value="">
                                     </div>
                                     <div class="col-12 mb-3">
                                         <label for="postcode">Postcode <span>*</span></label>
-                                        <input placeholder="12094" type="text" class="form-control" id="postcode" value="">
+                                        <input required name="postalcode" placeholder="12094" type="text" class="form-control" id="postcode" value="">
                                     </div>
                                     <div class="col-12 mb-3">
                                         <label for="city">Town/City <span>*</span></label>
-                                        <input placeholder="Aluthgama" type="text" class="form-control" id="city" value="">
+                                        <input required name="city" placeholder="Aluthgama" type="text" class="form-control" id="city" value="">
                                     </div>
                                     <div class="col-12 mb-3">
                                         <label for="state">Province <span>*</span></label>
-                                        <input placeholder="Southrn" type="text" class="form-control" id="state" value="">
+                                        <input required name="province" placeholder="Southrn" type="text" class="form-control" id="state" value="">
                                     </div>
                                     <div class="col-12 mb-3">
                                         <label for="phone_number">Phone No <span>*</span></label>
-                                        <input placeholder="+94 76 875 5787" type="number" class="form-control" id="phone_number" min="0" value="">
+                                        <input required name="mobile" placeholder="+94 76 875 5787" type="number" class="form-control" id="phone_number" min="0" value="">
                                     </div>
                                     <div class="col-12 mb-4">
                                         <label for="email_address">Email Address <span>*</span></label>
-                                        <input placeholder="savindupasingtha@gmail.com" type="email" class="form-control" id="email_address" value="">
+                                        <input required name="email" placeholder="savindupasingtha@gmail.com" type="email" class="form-control" id="email_address" value="">
                                     </div>
 
                                     <div class="col-12 checkBox">
                                         <div class="custom-control custom-checkbox d-block mb-2">
-                                            <input type="checkbox" class="custom-control-input" id="customCheck1">
+                                            <input required type="checkbox" class="custom-control-input" id="customCheck1">
                                             <label class="custom-control-label" for="customCheck1">Terms and conitions</label>
                                         </div>
                                         <div class="custom-control custom-checkbox d-block mb-2">
-                                            <input type="checkbox" class="custom-control-input" id="customCheck2">
+                                            <input required type="checkbox" class="custom-control-input" id="customCheck2">
                                             <label class="custom-control-label" for="customCheck2">Create an accout</label>
                                         </div>
                                         <div class="custom-control custom-checkbox d-block">
-                                            <input type="checkbox" class="custom-control-input" id="customCheck3">
+                                            <input required type="checkbox" class="custom-control-input" id="customCheck3">
                                             <label class="custom-control-label" for="customCheck3">Subscribe to our newsletter</label>
                                         </div>
                                     </div>
                                 </div>
-                            </form>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-md-6 col-lg-6">
-                        <div class="order-details-confirmation ml-lg-auto">
-
-                            <div class="cart-page-heading">
-                                <h5>Your Order</h5>
-                                <p>The Details</p>
-                            </div>
-
-                            <ul class="order-details-form mb-4">
-                                <li><span>Product</span> <span>Total</span></li>
-                                <li><span>Indian Ring</span> <span>$59.90</span></li>
-                                <li><span>Subtotal</span> <span>$59.90</span></li>
-                                <li><span>Shipping</span> <span>Free</span></li>
-                                <li><span>Total</span> <span>$59.90</span></li>
-                            </ul>
-
-
-                            <div id="accordion" role="tablist" class="mb-4">
-                                <div class="card">
-                                    <div class="card-header" role="tab" id="headingOne">
-                                        <h6 class="mb-0">
-                                            <a role="button" data-bs-toggle="collapse" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne"><i class="fa fa-circle-o mr-3"></i>Paypal</a>
-                                        </h6>
-                                    </div>
-
-                                    <div id="collapseOne" class="collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
-                                        <div class="card-body">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pharetra tempor so dales. Phasellus sagittis auctor gravida. Integ er bibendum sodales arcu id te mpus. Ut consectetur lacus.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card">
-                                    <div class="card-header" role="tab" id="headingTwo">
-                                        <h6 class="mb-0">
-                                            <a class="collapsed" data-bs-toggle="collapse" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"><i class="fa fa-circle-o mr-3"></i>cash on delievery</a>
-                                        </h6>
-                                    </div>
-                                    <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo" data-parent="#accordion">
-                                        <div class="card-body">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Explicabo quis in veritatis officia inventore, tempore provident dignissimos.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card">
-                                    <div class="card-header" role="tab" id="headingThree">
-                                        <h6 class="mb-0">
-                                            <a class="collapsed" data-bs-toggle="collapse" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree"><i class="fa fa-circle-o mr-3"></i>credit card</a>
-                                        </h6>
-                                    </div>
-                                    <div id="collapseThree" class="collapse" role="tabpanel" aria-labelledby="headingThree" data-parent="#accordion">
-                                        <div class="card-body">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Esse quo sint repudiandae suscipit ab soluta delectus voluptate, vero vitae</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card">
-                                    <div class="card-header" role="tab" id="headingFour">
-                                        <h6 class="mb-0">
-                                            <a class="collapsed" data-bs-toggle="collapse" href="#collapseFour" aria-expanded="true" aria-controls="collapseFour"><i class="fa fa-circle-o mr-3"></i>direct bank transfer</a>
-                                        </h6>
-                                    </div>
-                                    <div id="collapseFour" class="collapse show" role="tabpanel" aria-labelledby="headingThree" data-parent="#accordion">
-                                        <div class="card-body">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est cum autem eveniet saepe fugit, impedit magni.</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                
-                            </div>
-                            <div class="karl-checkout-btn">
-                                <a href=" #">Place Order</a>
+                                <!--  </form>  -->
                             </div>
                         </div>
-                    </div>
 
+                        <div class="col-12 col-md-6 col-lg-6">
+                            <div class="order-details-confirmation ml-lg-auto">
+
+                                <div class="cart-page-heading">
+                                    <h5>Your Order</h5>
+                                    <p>The Details</p>
+                                </div>
+
+
+                                <ul class="order-details-form mb-4">
+                                    <li><span>Product</span> <span>Total</span></li>
+                                </ul>
+
+                                <?php
+                                $x = 0;
+                                foreach ($_SESSION["cart"] as $keys => $values) {
+                                    if (
+                                        !empty($values["quentity"]) && !empty($values["quentity"]) &&
+                                        !empty($values["code"]) && !empty($values["name"] &&
+                                            !empty($values["price"]) && !empty($values["image"]))
+                                    ) {
+                                ?>
+                                        <ul class="order-details-form mb-4">
+                                            <li>
+                                                <span class="text-primary"><?php echo  $values["name"]; ?></span>
+                                                <span class="text-primary">$<?php echo $values["price"]; ?> X
+                                                    <?php echo $values["quentity"]; ?> =
+                                                    <?php echo $values["quentity"] * $values["price"]; ?>
+                                                </span>
+                                            </li>
+                                        </ul>
+                                <?php
+                                    }
+                                    $x++;
+                                }
+                                ?>
+
+                                <?php
+                                //total value calculation
+                                $sum = 0;
+                                foreach ($_SESSION["cart"] as $keys => $values) {
+                                    if (!empty($values["quentity"]) && !empty($values["quentity"])) {
+                                        $t = $values["quentity"] * $values["price"];
+                                        $sum = $t + $sum;
+                                    }
+                                }
+                                ?>
+                                <ul class="order-details-form mb-4">
+                                    <li><span>Shipping</span> <span>Free</span></li>
+                                    <li><span>Total</span> <span>$<?php echo $sum; ?></span></li>
+                                </ul>
+                                <div id="accordion" role="tablist" class="mb-4">
+                                    <div class="card">
+                                        <div class="card-header" role="tab" id="headingOne">
+                                            <h6 class="mb-0">
+                                                <a role="button" data-bs-toggle="collapse" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne"><i class="fa fa-circle-o mr-3"></i>Paypal</a>
+                                            </h6>
+                                        </div>
+
+                                        <div id="collapseOne" class="collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
+                                            <div class="card-body">
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pharetra tempor so dales. Phasellus sagittis auctor gravida. Integ er bibendum sodales arcu id te mpus. Ut consectetur lacus.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-header" role="tab" id="headingTwo">
+                                            <h6 class="mb-0">
+                                                <a class="collapsed" data-bs-toggle="collapse" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"><i class="fa fa-circle-o mr-3"></i>cash on delievery</a>
+                                            </h6>
+                                        </div>
+                                        <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo" data-parent="#accordion">
+                                            <div class="card-body">
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Explicabo quis in veritatis officia inventore, tempore provident dignissimos.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-header" role="tab" id="headingThree">
+                                            <h6 class="mb-0">
+                                                <a class="collapsed" data-bs-toggle="collapse" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree"><i class="fa fa-circle-o mr-3"></i>credit card</a>
+                                            </h6>
+                                        </div>
+                                        <div id="collapseThree" class="collapse" role="tabpanel" aria-labelledby="headingThree" data-parent="#accordion">
+                                            <div class="card-body">
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Esse quo sint repudiandae suscipit ab soluta delectus voluptate, vero vitae</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-header" role="tab" id="headingFour">
+                                            <h6 class="mb-0">
+                                                <a class="collapsed" data-bs-toggle="collapse" href="#collapseFour" aria-expanded="true" aria-controls="collapseFour"><i class="fa fa-circle-o mr-3"></i>direct bank transfer</a>
+                                            </h6>
+                                        </div>
+                                        <div id="collapseFour" class="collapse show" role="tabpanel" aria-labelledby="headingThree" data-parent="#accordion">
+                                            <div class="card-body">
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est cum autem eveniet saepe fugit, impedit magni.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="karl-checkout-btn">
+                                    <!--  <form method="GET" action=""> -->
+                                    <!--payment button   <a id="paypal-payment-button">Place Order</a>-->
+                                    <button type="submit" name="payment" style="background:none; border:none; width:100%; height:auto;">
+                                        <div id="paypal-payment-button"> </div>
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
-        </div>
+        </form>
     </section>
 
     <section style="width:100%; height:50px; "></section>
 </body>
+<script src="https://www.paypal.com/sdk/js?client-id=ATqJoT8uledW83BN2RvdA4o9tptMnGw4EUVlV1na6YHhKgqXEHcJXE8t0EZLGsDr4mybfMJ5nXxL10vQ&disable-funding=credit,card"></script>
+<script src="./PayPal_Integration_PHP-main/index.js"></script>
 
 </html>

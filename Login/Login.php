@@ -10,6 +10,7 @@
 
 </head>
 
+
 <body>
     <section>
 
@@ -31,22 +32,23 @@
                                 <div class="text-center">
                                     <h5 class=" " id="exampleModalLongTitle">Login</h5>
                                 </div>
-                                <form>
+                                <form method="POST" action="" onsubmit="(e)=>{ e.preventDefault(); return false;}">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Email address</label>
-                                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                                        <input required type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
                                         <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputPassword1">Password</label>
-                                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                                        <input required type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
                                     </div>
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                                        <br>
+                                        <input required type="checkbox" class="form-check-input" id="exampleCheck1">
                                         <label class="form-check-label" for="exampleCheck1">Check me out</label>
                                     </div>
                                     <div class="text-center">
-                                        <button type="submit" class="btn btn-primary">SignIn</button>
+                                        <button type="submit" name="login" class="btn btn-primary">SignIn</button>
                                     </div>
                                 </form>
                             </div>
@@ -69,3 +71,43 @@
 </body>
 
 </html>
+<?php
+
+if (isset($_POST["login"])) {
+
+    include('./Database-php/start-mysql-connection.php');
+    if (isset($_POST["password"]) && isset($_POST["email"])) {
+        $sql = 'SELECT * FROM register';
+        $result = mysqli_query($connection, $sql);
+        if (mysqli_num_rows($result) > 0) {
+            $i = 0;
+            $x = 0;
+            while ($rowData = mysqli_fetch_assoc($result)) {
+                if (isset($rowData)) {
+                    $logid[$i] = $rowData['id'];
+                    $email[$i] = $rowData['email'];
+                    $password[$i] = $rowData['password'];
+                    if (($email[$i] == $_POST["email"]) && ($password[$i] == $_POST["password"])) {
+                        echo '<script type="text/javascript"> alert("Login Success ."); </script>';
+                        header("Location:index.php");
+                        break;
+                    }
+
+                    $i++;
+                }
+            }
+        }
+
+        include('./Database-php/close-mysql-connection.php');
+    } else {
+        if (isset($_COOKIE["regemail"]) &&  isset($_COOKIE["regpassword"])) {
+            if (($_COOKIE["regemail"] == $_POST["email"]) && ($_COOKIE["regpassword"] == $_POST["password"])) {
+                echo '<script type="text/javascript"> alert("Login Success ."); </script>';
+                header("Location:index.php");
+            }
+        }
+    }
+}
+
+
+?>

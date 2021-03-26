@@ -1,3 +1,21 @@
+<?php
+//delete cart items
+if (isset($_GET["deleteCart"])) {
+    if (!empty($_GET["deleteCart"])) {
+        $deleteItem = $_GET["deleteCart"];
+        if (!empty($_SESSION["cart"])) {
+            foreach ($_SESSION["cart"] as $keys => $values) {
+                if ($deleteItem == $keys) {
+                    unset($_SESSION["cart"]["$deleteItem"]);
+                }
+            }
+        }
+    }
+
+    header("Refresh:0; url=index.php");
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -177,34 +195,86 @@
                     <h1>JEWELLER</h1> </br>
                 </div>
 
-                <!-- Drop down menu-->
+                <!-- Drop down menu total value calculation and session variables read -->
+                <?php
+                $sum = 0;
+                if (isset($_SESSION["cart"])) {
+
+                    foreach ($_SESSION["cart"] as $keys => $values) {
+                        if (!empty($values["quentity"]) && !empty($values["quentity"])) {
+                            $t = $values["quentity"] * $values["price"];
+                            $sum = $t + $sum;
+                        }
+                    }
+                }
+                ?>
                 <div id="titleicon" class="col-sm-12 col-md-6">
                     <div class="dropstart p-5">
-                        <a href="#" class="dropdown-toggle btn " type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown">
-                            <i class="fa fa-shopping-bag "></i>Your Bag $20</a>
+                        <a class="dropdown-toggle btn " type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown">
+                            <i class="fa fa-shopping-bag "></i>
+                            Your Bag $ <?php echo $sum; ?>
+                        </a>
                         <span class="caret"></span></button>
 
-                        <div style="width:300px; height:auto;" class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <div style="width:410px; height:auto;" class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                             <div class="d-md-flex">
-                                <div class="overflow-auto bg-light" style="width:300px; height:300px;">
+                                <div class="overflow-auto bg-light" style="width:410px; height:300px;">
                                     <ul>
-
+                                        <li class="dropdown-item">
+                                            <div class="text-center">
+                                                <?php
+                                                echo '<h3 class="font-weight-bold">Total $ ' . $sum . ' </h3>';
+                                                ?>
+                                            </div>
+                                        </li>
                                         <?php
-                                        for ($x = 0; $x <= 100; $x++) {
+                                        $x = 0;
+                                        if (isset($_SESSION["cart"])) {
+                                            foreach ($_SESSION["cart"] as $keys => $values) {
+                                                if (
+                                                    !empty($values["quentity"]) && !empty($values["quentity"]) &&
+                                                    !empty($values["code"]) && !empty($values["name"] &&
+                                                        !empty($values["price"]) && !empty($values["image"]))
+                                                ) {
+                                        ?>
+                                                    <li class="dropdown-item">
+                                                        <div class="d-block">
+                                                            <div class="d-flex flex-row">
 
-                                            echo '<li class="dropdown-item">' . $x . '</li>';
+                                                                <div class="p-2 ">
+                                                                    <p> <?php echo $x;
+                                                                        ?> : </p>
+                                                                </div>
+                                                                <div class="p-2 col-3">
+                                                                    <img class="" style="width:50px; height:50px; " src="<?php echo $values["image"]; ?>" alt="First slide">
+                                                                </div>
+                                                                <div class="p-2">
+                                                                    <p>
+                                                                        <span style="width:250px;  height:auto;"><?php echo $values["name"]; ?></span>
+                                                                        <span style="width:75px;  height:auto;"><?php echo $values["price"]; ?>$ </span> <span> X </span>
+                                                                        <span style="width:75px;  height:auto;"> <?php echo $values["quentity"]; ?></span>
+                                                                    </p>
+                                                                </div>
+                                                                <div class=" p-2">
+                                                                    <form method="GET" action="">
+                                                                        <button style="color: inherit; border:none; background: none; " type="submit" name="deleteCart" value="<?php echo $values["code"]; ?>">
+                                                                            <i class="fa fa-trash"></i>
+                                                                        </button>
+                                                                    </form>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                        <?php
+
+                                                }
+                                                $x++;
+                                            }
                                         }
                                         ?>
 
-                                        <li class="dropdown-item">HTML</li>
-                                        <li class="dropdown-item">HTML</li>
-                                        <li class="dropdown-item">HTML</li>
-                                        <li class="dropdown-item">HTML</li>
-                                        <li class="dropdown-item">HTML</li>
-                                        <li class="dropdown-item">HTML</li>
-                                        <li class="dropdown-item">HTML</li>
-                                        <li class="dropdown-item">HTML</li>
-                                        <li class="dropdown-item">HTML</li>
+
                                     </ul>
                                 </div>
                             </div>
@@ -242,16 +312,33 @@
                                 </li>
 
                                 <li>
-                                    <h1>NECLESSE</h1>
+                                    <form method="POST" action="">
+                                        <button style="color: inherit; border:none; background: none; " type="submit" name="type" name="type" value="<?php echo $type = "necklesse"; ?>">
+                                            <h1><a style=" text-decoration:none; color:black;">NECLESSE </a></h1>
+                                        </button>
+                                    </form>
                                 </li>
                                 <li>
-                                    <h1>BRACELET</h1>
+                                    <form method="POST" action="">
+                                        <button style="color: inherit; border:none; background: none; " type="submit" name="type" name="type" value="<?php echo $type = "bracelet"; ?>">
+                                            <h1><a style=" text-decoration:none; color:black;">BRACELET</a></h1>
+                                        </button>
+                                    </form>
                                 </li>
                                 <li>
-                                    <h1>RING</h1>
+                                    <form method="POST" action="">
+                                        <button style="color: inherit; border:none; background: none; " type="submit" name="type" name="type" value="<?php echo $type = "ring"; ?>">
+                                            <h1><a style=" text-decoration:none; color:black;">RING</a></h1>
+
+                                        </button>
+                                    </form>
                                 </li>
                                 <li>
-                                    <h1>EARING</h1>
+                                    <form method="POST" action="">
+                                        <button style="color: inherit; border:none; background: none; " type="submit" name="type" name="type" value="<?php echo $type = "earing"; ?>">
+                                            <h1><a style=" text-decoration:none; color:black;">EARING</a></h1>
+                                        </button>
+                                    </form>
                                 </li>
                                 <li>
                                     <h1><a style=" text-decoration:none; color:black;" href="#paysec">PAYMENT</a></h1>
@@ -266,7 +353,11 @@
                                     <h1 type="button" data-bs-toggle="modal" data-bs-target="#exampleModalCenterLogin">LOGIN</h1>
                                 </li>
                                 <li>
-                                    <h1 type="button" data-bs-toggle="modal" data-bs-target="#exampleModalCenterRegistration">REGISTRATION</h1>
+                                    <h1 type="button" data-bs-toggle="modal" data-bs-target="#exampleModalCenterRegistration"><?php if (!empty($_COOKIE["regemail"])) {
+                                                                                                                                    echo $r = "REGISTRED";
+                                                                                                                                } else {
+                                                                                                                                    echo "REGISTRATION";
+                                                                                                                                } ?></h1>
                                 </li>
                             </ul>
                         </div>
@@ -283,19 +374,12 @@
     <div class="modal fade" id="exampleModalCenterLogin" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <?php include("./Login/Login.php"); ?>
         <!--   Modal -->
-
-
     </div>
 
     <!-- Modals Login-registrations -->
     <div class="modal fade" id="exampleModalCenterRegistration" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <?php include("./Registration/Registration.php"); ?>
     </div>
-
-
-
-
-
 
     <section id="box">
         <div class="container-fluid">
@@ -327,5 +411,17 @@
     </section>
     <section style="width:100%; height:50px;"></section>
 </body>
+<script type="text/javascript">
+    function delete() {
+        var quentity = document.getElementById("qty").value;
+        var code = document.getElementById("productCode").value;
+        var name = document.getElementById("productName").value;
+        var image = document.getElementById("productImage").value;
+        var price = document.getElementById("price").value;
+        console.log(quentity + code + image);
+        var cartArr = ['name' = name, 'code' = code, 'price' = price, 'quentity' = quentity, 'image' = image];
+        setCookie("saveTocartCookie", cartArr, 1);
+    }
+</script>
 
 </html>

@@ -1,3 +1,34 @@
+<?php
+
+if (isset($_POST["register"])) {
+
+    include('./Database-php/start-mysql-connection.php');
+    if ($_POST["password"] == $_POST["comfrimpassword"]) {
+        $insert = "INSERT INTO register (email,password) VALUES('{$_POST["email"]}','{$_POST["password"]}') ";
+        $result = mysqli_query($connection, $insert);
+        if ($result) {
+            // setcookie("regemail");
+            //  setcookie("regemail", $_POST["email"], time() + (86400 * 30), "/"); // 86400 = 1 day
+            //  setcookie("regpassword", $_POST["password"], time() + (86400 * 30), "/"); // 86400 = 1 day
+            //   header("Location:index.php");
+            echo '<script type="text/javascript">
+                document . cookie = "regpassword" + "=" + ' . $_POST["password"] . ' + ";" + ";path=/";
+               document . cookie = "regemail" + "=" + ' . $_POST["email"] . ' + ";" + ";path=/";
+             
+                </script>';
+
+            echo '<script type="text/javascript"> alert("Registered ."); </script>';
+        }
+    }
+
+    include('./Database-php/close-mysql-connection.php');
+}
+
+
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -31,26 +62,27 @@
                                 <div class="text-center">
                                     <h5 class=" " id="exampleModalLongTitle">Registration</h5>
                                 </div>
-                                <form>
+                                <form method="POST" action="">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Email address</label>
-                                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                                        <input required type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
                                         <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputPassword1">Password</label>
-                                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                                        <input required type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputPassword2">Comfrim Password</label>
-                                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                                        <input required type="password" name="comfrimpassword" class="form-control" id="exampleInputPassword1" placeholder="Password">
                                     </div>
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                                        <br>
+                                        <input required type="checkbox" class="form-check-input" id="exampleCheck1">
                                         <label class="form-check-label" for="exampleCheck1">Check me out</label>
                                     </div>
                                     <div class="text-center">
-                                        <button type="submit" class="btn btn-primary">SignUp</button>
+                                        <button type="submit" name="register" class="btn btn-primary">SignUp</button>
                                     </div>
                                 </form>
                             </div>

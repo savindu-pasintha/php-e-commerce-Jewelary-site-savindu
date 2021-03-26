@@ -94,10 +94,10 @@
                             <div class="carousel-item active">
                                 <div class="single-testimonial-area text-center">
                                     <span class="quote">"</span>
-                                    <h6>Nunc pulvinar molestie sem id blandit. Nunc venenatis interdum mollis. Aliquam finibus nulla quam, a iaculis justo finibus non. Suspendisse in fermentum nunc.Nunc pulvinar molestie sem id blandit. Nunc venenatis interdum mollis. </h6>
+                                    <h6>This is to convey my special thanks and appreciation to Devi Jewelers for making my tiara ring with beauty and elegance. Special Mention to Mr.Sathya for taking up the responsibility of making the ring according to my desire and doing the needful. Your customer service is beyond applause! and I wish such classy work and dedication will continue forever in your lifetime. Indeed it was a pleasant Akshyathrithi.</h6>
                                     <div class="testimonial-info d-flex align-items-center justify-content-center">
                                         <div class="tes-thumbnail">
-                                            <img class="img " width="100%" height="100%" src="./Images/martin-de-arriba-uf_IDewI6iQ-unsplash.jpg" alt="Third slide">
+                                            <img class="img " width="100%" height="100%" src="https://www.rajjewels.com/media/homesliders/sliders/image/2/2/22k-gold-bangle-bracelets-for-her_new.jpg" alt="Third slide">
                                         </div>
                                         <div class="testi-data">
                                             <p>Savindu Pasintha</p>
@@ -110,10 +110,10 @@
                             <div class="carousel-item">
                                 <div class="single-testimonial-area text-center">
                                     <span class="quote">"</span>
-                                    <h6>Nunc pulvinar molestie sem id blandit. Nunc venenatis interdum mollis. Aliquam finibus nulla quam, a iaculis justo finibus non. Suspendisse in fermentum nunc.Nunc pulvinar molestie sem id blandit. Nunc venenatis interdum mollis. </h6>
+                                    <h6>This is to convey my special thanks and appreciation to Devi Jewelers for making my tiara ring with beauty and elegance. Special Mention to Mr.Sathya for taking up the responsibility of making the ring according to my desire and doing the needful. Your customer service is beyond applause! and I wish such classy work and dedication will continue forever in your lifetime. Indeed it was a pleasant Akshyathrithi.</h6>
                                     <div class="testimonial-info d-flex align-items-center justify-content-center">
                                         <div class="tes-thumbnail">
-                                            <img class="img" width="100%" height="100%" src="./Images/martin-de-arriba-uf_IDewI6iQ-unsplash.jpg" alt="Third slide">
+                                            <img class="img" width="100%" height="100%" src="https://devijewellers.lk/wp-content/uploads/2018/08/Testimony-3.jpg_58351c0c84d46.jpeg" alt="Third slide">
                                         </div>
                                         <div class="testi-data">
                                             <p>Lakmal MUnasinghe</p>
@@ -127,10 +127,10 @@
                             <div class="carousel-item">
                                 <div class="single-testimonial-area text-center">
                                     <span class="quote">"</span>
-                                    <h6>Nunc pulvinar molestie sem id blandit. Nunc venenatis interdum mollis. Aliquam finibus nulla quam, a iaculis justo finibus non. Suspendisse in fermentum nunc.Nunc pulvinar molestie sem id blandit. Nunc venenatis interdum mollis. </h6>
+                                    <h6>This is to convey my special thanks and appreciation to Devi Jewelers for making my tiara ring with beauty and elegance. Special Mention to Mr.Sathya for taking up the responsibility of making the ring according to my desire and doing the needful. Your customer service is beyond applause! and I wish such classy work and dedication will continue forever in your lifetime. Indeed it was a pleasant Akshyathrithi. </h6>
                                     <div class="testimonial-info d-flex align-items-center justify-content-center">
                                         <div class="tes-thumbnail">
-                                            <img class="img" width="100%" height="100%" src="./Images/martin-de-arriba-uf_IDewI6iQ-unsplash.jpg" alt="Third slide">
+                                            <img class="img" width="100%" height="100%" src="https://devijewellers.lk/wp-content/uploads/2019/01/Earrings_guetzli.jpg" alt="Third slide">
                                         </div>
                                         <div class="testi-data">
                                             <p>Oshada Nethsara</p>
