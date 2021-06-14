@@ -13,7 +13,7 @@
 6
 ![image](https://user-images.githubusercontent.com/64083148/121847125-0004fe80-cce0-11eb-8b49-3826d284eb8c.png)
 7
-![image](https://user-images.githubusercontent.com/64083148/121846793-7f460280-ccdf-11eb-8813-0efea4997550.png)
+
 8
 ![image](https://user-images.githubusercontent.com/64083148/121846318-c54e9680-ccde-11eb-88fc-2c85fe479753.png)
 9
